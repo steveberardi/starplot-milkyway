@@ -9,6 +9,8 @@ __pycache__/
 duckdb-extensions/
 *.parquet
 
+gaia-*
+
 # C extensions
 *.so
 

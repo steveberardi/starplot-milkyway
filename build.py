@@ -53,14 +53,6 @@ def build():
         row_group_size=100_000,
     )
 
-    # all_stars = [s for s in Star.all(catalog=catalog)]
-    # assert len(all_stars) == 119_625
-
-    # sirius = Star.get(name="Sirius", catalog=catalog)
-    # assert sirius.magnitude == -1.44
-    # assert sirius.hip == 32349
-    # assert sirius.constellation_id == "cma"
-
     duration = time.time() - time_start
     print(f"Done. {duration:.000f}s")
 
