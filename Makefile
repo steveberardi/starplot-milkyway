@@ -40,6 +40,13 @@ build: venv/bin/activate
 	@mkdir -p data
 	$(PYTHON) build.py
 
+build-gaia: venv/bin/activate
+# 	rm -rf build
+# 	rm -f build.log
+# 	@mkdir -p build
+# 	@mkdir -p data
+	$(PYTHON) gaia.py
+
 # Releases ------------------------------------------
 release-check:
 	@CHECK="$(VERSION_CHECK)";  \

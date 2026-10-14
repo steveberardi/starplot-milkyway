@@ -11,6 +11,8 @@ duckdb-extensions/
 
 gaia-*
 
+*.bsp
+
 # C extensions
 *.so
 
