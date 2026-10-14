@@ -11,36 +11,32 @@ VERSION_CHECK=$(shell gh release list \
 		--jq '.[] | select(.tagName == "v$(VERSION)")' | wc -c)
 
 
+DATA_PATH=$(shell pwd)/data/
+
 # Environment Variables ------------------------------------------
-export STARPLOT_DATA_PATH=./data/
+export STARPLOT_DATA_PATH=$(DATA_PATH)
 
-# Development ------------------------------------------
-install: venv/bin/activate
+# ------------------------------------------------------------------
+install:
+	[ -d ".venv" ] || uv venv && uv pip install -r requirements.txt
 
-format: venv/bin/activate
-	@$(PYTHON) -m ruff format build.py $(ARGS)
-	@$(PYTHON) -m ruff check build.py --fix $(ARGS)
-
-venv/bin/activate: requirements.txt
-	python -m venv venv
-	./venv/bin/pip install -r requirements.txt
-
-shell: venv/bin/activate
-	$(PYTHON)
+format:
+	uv run ruff format build.py $(ARGS)
+	uv run ruff check build.py --fix $(ARGS)
 
 clean:
 	rm -rf __pycache__
 	rm -rf venv
 	rm -rf build
 
-build: venv/bin/activate
+build:
 	rm -rf build
 	rm -f build.log
 	@mkdir -p build
 	@mkdir -p data
 	$(PYTHON) build.py
 
-build-gaia: venv/bin/activate
+build-gaia:
 # 	rm -rf build
 # 	rm -f build.log
 # 	@mkdir -p build

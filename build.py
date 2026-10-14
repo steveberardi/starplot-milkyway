@@ -14,6 +14,7 @@ HERE = Path(__file__).resolve().parent
 DATA_PATH = HERE / "data"
 BUILD_PATH = HERE / "build"
 
+
 def milky_ways():
     ctr = 0
     with open(DATA_PATH / "milkyway.json", "r") as infile:
