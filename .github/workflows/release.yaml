@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -18,7 +18,7 @@ jobs:
       run: make install
     
     - name: Build Catalog
-      run: make build CI=true
+      run: make build
 
     - name: Check Release Version
       run: make release-check

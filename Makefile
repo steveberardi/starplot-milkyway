@@ -56,7 +56,9 @@ release-check:
 release: release-check
 	gh release create \
 		v$(VERSION) \
-		build/*.parquet \
+		build/milky_way-$(VERSION).parquet \
+		build/milkyway-$(VERSION).svg \
+		build/overlay-$(VERSION).png \
 		--title "v$(VERSION)" \
 		-R steveberardi/$(REPO_NAME)
 
