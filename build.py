@@ -18,36 +18,15 @@ HERE = Path(__file__).resolve().parent
 DATA_PATH = HERE / "data"
 BUILD_PATH = HERE / "build"
 
-PARQUET_PATH = BUILD_PATH / "milky_way.parquet"
-PARQUET_PATH_SMOOTH = BUILD_PATH / "milky_way-smooth.parquet"
+PARQUET_PATH = BUILD_PATH / f"milky_way-{__version__}.parquet"
 STARS_IMAGE_PATH = DATA_PATH / "milkyway-mollweide.png"
 
-# Size (degrees) of the grid cells used to chunk the smooth and image Milky Ways, and how far
+# Size (degrees) of the grid cells used to chunk the Milky Way, and how far
 # each chunk extends past its cell so that neighboring chunks overlap
 CHUNK_SIZE = 8
 CHUNK_OVERLAP = 0.5
 # Chunks smaller than this (sq. degrees) are slivers at the edge of a cell
 MIN_CHUNK_AREA = 0.1
-
-
-def milky_ways():
-    ctr = 0
-    with open(DATA_PATH / "milkyway.json", "r") as infile:
-        data = json.loads(infile.read())
-
-        for feature in data["features"]:
-            ctr += 1
-            coordinates = feature["geometry"]["coordinates"]
-            geometry = Polygon(coordinates[0])
-            ra = round(geometry.centroid.x, 4)
-            dec = round(geometry.centroid.y, 4)
-
-            yield MilkyWay(
-                pk=ctr,
-                ra=ra,
-                dec=dec,
-                geometry=geometry,
-            )
 
 
 def chunks(filename: str):
@@ -90,7 +69,7 @@ def milky_ways_chunked(filename: str):
 
 
 def build(objects, path: Path, label: str):
-    print(f"Building {label} Milky Way Catalog...")
+    print(f"Building {label} Catalog...")
     time_start = time.time()
 
     catalog = Catalog(path=path)
@@ -109,7 +88,8 @@ def build(objects, path: Path, label: str):
     )
 
     duration = time.time() - time_start
-    print(f"Done. {duration:.000f}s")
+    duration_ms = int(duration * 1000)
+    print(f"Done. {duration_ms}ms")
 
 
 def plot(catalog_path: Path, svg_path: Path):
@@ -170,9 +150,6 @@ def overlay(geojson_filename: str, image_path: Path, png_path: Path):
 if __name__ == "__main__":
     BUILD_PATH.mkdir(exist_ok=True)
 
-    build(milky_ways(), PARQUET_PATH, "original")
-    plot(PARQUET_PATH, BUILD_PATH / "milkyway.svg")
-
-    build(milky_ways_chunked("milkyway-smooth.json"), PARQUET_PATH_SMOOTH, "smooth")
-    plot(PARQUET_PATH_SMOOTH, BUILD_PATH / "milkyway-smooth.svg")
-    overlay("milkyway-smooth.json", STARS_IMAGE_PATH, BUILD_PATH / "overlay-smooth.png")
+    build(milky_ways_chunked("milkyway.json"), PARQUET_PATH, "Milky Way")
+    plot(PARQUET_PATH, BUILD_PATH / f"milkyway-{__version__}.svg")
+    overlay("milkyway.json", STARS_IMAGE_PATH, BUILD_PATH / f"overlay-{__version__}.png")
