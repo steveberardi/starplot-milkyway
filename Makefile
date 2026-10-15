@@ -34,7 +34,7 @@ build:
 	rm -f build.log
 	@mkdir -p build
 	@mkdir -p data
-	$(PYTHON) build.py
+	uv run build.py
 
 build-gaia:
 # 	rm -rf build
