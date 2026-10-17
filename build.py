@@ -7,12 +7,12 @@ from PIL import Image, ImageDraw
 from shapely import Polygon, box
 from shapely.geometry import shape
 
-from starplot import MapPlot, Mollweide, MilkyWay
+from starplot import GalaxyPlot, MapPlot, Mollweide, MilkyWay, Miller
 from starplot.data import Catalog
 from starplot.styles import PlotStyle, extensions
 
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 HERE = Path(__file__).resolve().parent
 DATA_PATH = HERE / "data"
@@ -92,17 +92,39 @@ def build(objects, path: Path, label: str):
     print(f"Done. {duration_ms}ms")
 
 
-def plot(catalog_path: Path, svg_path: Path):
-    p = MapPlot(
-        projection=Mollweide(),
-        resolution=4_000,
-        style=PlotStyle().extend(
-            extensions.BLUE_NIGHT,
-            extensions.MAP,
-        ),
+def plot_style():
+    return PlotStyle().extend(
+        extensions.BLUE_NIGHT,
+        extensions.MAP,
     )
+
+
+def plot(p, catalog_path: Path, svg_path: Path):
     p.milky_way(catalog=Catalog(path=catalog_path))
+    p.gridlines()
+    p.constellations(style__opacity=0.2)
     p.export(svg_path)
+
+
+def plots(catalog_path: Path):
+    version = __version__
+    kwargs = dict(resolution=4_000, style=plot_style())
+
+    plot(
+        MapPlot(projection=Mollweide(), **kwargs),
+        catalog_path,
+        BUILD_PATH / f"milkyway-mollweide-{version}.svg",
+    )
+    plot(
+        MapPlot(projection=Miller(), **kwargs),
+        catalog_path,
+        BUILD_PATH / f"milkyway-miller-{version}.svg",
+    )
+    plot(
+        GalaxyPlot(**kwargs),
+        catalog_path,
+        BUILD_PATH / f"milkyway-galactic-{version}.svg",
+    )
 
 
 def mollweide_pixels(ra, dec, width, height):
@@ -151,7 +173,7 @@ if __name__ == "__main__":
     BUILD_PATH.mkdir(exist_ok=True)
 
     build(milky_ways_chunked("milkyway.json"), PARQUET_PATH, "Milky Way")
-    plot(PARQUET_PATH, BUILD_PATH / f"milkyway-{__version__}.svg")
+    plots(PARQUET_PATH)
     overlay(
         "milkyway.json", STARS_IMAGE_PATH, BUILD_PATH / f"overlay-{__version__}.png"
     )

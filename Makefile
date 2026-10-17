@@ -57,7 +57,9 @@ release: release-check
 	gh release create \
 		v$(VERSION) \
 		build/milky_way-$(VERSION).parquet \
-		build/milkyway-$(VERSION).svg \
+		build/milkyway-mollweide-$(VERSION).svg \
+		build/milkyway-miller-$(VERSION).svg \
+		build/milkyway-galactic-$(VERSION).svg \
 		build/overlay-$(VERSION).png \
 		--title "v$(VERSION)" \
 		-R steveberardi/$(REPO_NAME)
