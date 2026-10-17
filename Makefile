@@ -3,7 +3,7 @@ PYTHON=./venv/bin/python
 
 REPO_NAME=starplot-milkyway
 
-VERSION=$(shell ./venv/bin/python -c 'from build import __version__; print(__version__)')
+VERSION=$(shell uv run python -c 'from build import __version__; print(__version__)')
 VERSION_CHECK=$(shell gh release list \
 		-R steveberardi/$(REPO_NAME) \
 		--limit 1000 \
@@ -62,7 +62,7 @@ release: release-check
 		--title "v$(VERSION)" \
 		-R steveberardi/$(REPO_NAME)
 
-version: venv/bin/activate
+version:
 	@echo $(VERSION)
 
 
