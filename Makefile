@@ -2,6 +2,7 @@ PYTHONPATH=./src/
 PYTHON=./venv/bin/python
 
 REPO_NAME=starplot-milkyway
+RELEASE_URL=https://github.com/steveberardi/$(REPO_NAME)/releases/download
 
 VERSION=$(shell uv run python -c 'from build import __version__; print(__version__)')
 VERSION_CHECK=$(shell gh release list \
@@ -62,6 +63,7 @@ release: release-check
 		build/milkyway-galactic-$(VERSION).svg \
 		build/overlay-$(VERSION).png \
 		--title "v$(VERSION)" \
+		--notes "![Milky Way outline over the star map]($(RELEASE_URL)/v$(VERSION)/overlay-$(VERSION).png)" \
 		-R steveberardi/$(REPO_NAME)
 
 version:
