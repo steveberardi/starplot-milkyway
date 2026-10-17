@@ -152,4 +152,6 @@ if __name__ == "__main__":
 
     build(milky_ways_chunked("milkyway.json"), PARQUET_PATH, "Milky Way")
     plot(PARQUET_PATH, BUILD_PATH / f"milkyway-{__version__}.svg")
-    overlay("milkyway.json", STARS_IMAGE_PATH, BUILD_PATH / f"overlay-{__version__}.png")
+    overlay(
+        "milkyway.json", STARS_IMAGE_PATH, BUILD_PATH / f"overlay-{__version__}.png"
+    )
